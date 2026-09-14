@@ -1,4 +1,4 @@
-The 500 tickers of VFV.TO, which is the same as VOO. I manage to download the list of these tickers for VFV but not VOO. I will be using this .txt file to create a list for my momentum strategy.
+The 500 tickers of VFV.TO in the date of 09/14/2026, which is the same as VOO. I manage to download the list of these tickers for VFV but not VOO. I will be using this .txt file to create a list for my momentum strategy.
 
 NVDA
 AAPL
