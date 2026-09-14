@@ -15,7 +15,7 @@ def data_check(stock):
     pd.DataFrame
         The historical data of the stock.
     """
-    return yf.download(stock, start="2020-01-01", interval="1d", auto_adjust=False)
+    return yf.download(stock, start="2020-01-01", interval="1d", auto_adjust=True)
 
 def extract_close_prices(history_data):
     """
@@ -52,3 +52,81 @@ def extract_volume(history_data):
         volume = history_data['Volume']
 
     return volume.dropna()
+
+def plot_close_prices(close_prices, stock):
+    """
+    Plot the close prices of the stock.
+
+    Parameters:
+    close_prices : pd.Series
+        The close prices of the stock.
+    stock : str
+        The ticker symbol of the stock.
+    """
+    plt.figure(figsize=(12, 6))
+    plt.plot(close_prices.index, close_prices.values)
+    plt.title(f'Close Prices of {stock}')
+    plt.xlabel('Date')
+    plt.ylabel('Close Price')
+    plt.grid()
+    plt.show()
+
+def plot_volume(volume_data, stock):
+    """
+    Plot the volume data of the stock.
+
+    Parameters:
+    volume_data : pd.Series
+        The volume data of the stock.
+    stock : str
+        The ticker symbol of the stock.
+    """
+    plt.figure(figsize=(12, 6))
+    plt.plot(volume_data.index, volume_data.values)
+    plt.title(f'Volume Data of {stock}')
+    plt.xlabel('Date')
+    plt.ylabel('Volume')
+    plt.grid()
+    plt.show()
+
+def dollar_cost_average_investment(close_prices, investment_amount, investment_frequency):
+    """
+    Calculate the dollar-cost average investment strategy.
+
+    Parameters:
+    close_prices : pd.Series
+        The close prices of the stock.
+    investment_amount : float
+        The amount to invest at each interval.
+    investment_frequency : str
+        The frequency of investment (e.g., '1M' for monthly, '1W' for weekly).
+    Returns:
+    pd.DataFrame
+        A DataFrame containing the total shares purchased and total invested amount over time.
+    """
+    if isinstance(close_prices, pd.DataFrame):
+        if close_prices.shape[1] != 1:
+            raise ValueError("close_prices must contain only one stock.")
+
+        close_prices = close_prices.iloc[:, 0]
+    # Resample the close prices based on the investment frequency
+    resampled_prices = close_prices.resample(investment_frequency).last().dropna()
+    
+    # Calculate the number of shares purchased at each interval
+    shares_purchased = investment_amount / resampled_prices
+    
+    # Calculate cumulative shares, total invested amount, portfolio value, and investment % gain
+    cumulative_shares = shares_purchased.cumsum()
+
+    total_invested = np.arange(1, len(cumulative_shares) + 1) * investment_amount
+
+    portfolio_value = cumulative_shares * resampled_prices
+
+    pct_gain = ((cumulative_shares * resampled_prices) / total_invested - 1) * 100
+    
+    return pd.DataFrame({
+        'Total Shares': cumulative_shares,
+        'Total Invested': total_invested,
+        'Portfolio Value': portfolio_value,
+        'Percentage Gain': pct_gain
+    }, index=resampled_prices.index)
