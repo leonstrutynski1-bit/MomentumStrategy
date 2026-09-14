@@ -130,3 +130,22 @@ def dollar_cost_average_investment(close_prices, investment_amount, investment_f
         'Portfolio Value': portfolio_value,
         'Percentage Gain': pct_gain
     }, index=resampled_prices.index)
+
+
+def extract_tickers(file_path):
+    """
+    Extract the ticker symbols from a text file. In this case, this if for the S&P 500 tickers. The text file should have the ticker symbols listed one per line, with the first two lines being headers that will be skipped.
+
+    Parameters:
+    file_path : str
+        The path to the text file containing the ticker symbols.
+    Returns:
+    list
+        A list of ticker symbols.
+    """
+    with open(file_path, 'r', encoding='utf-8') as file:
+        next(file)  # Skip the header line
+        next(file)  # Skip the second line
+
+        tickers = [line.strip() for line in file if line.strip()]
+    return tickers

@@ -6,6 +6,9 @@ import fonctions_momentum as fm
 
 # The main code of my momentum strategy will be implemented in this file. It will use the functions defined in fonctions_momentum.py to perform the necessary calculations and generate the desired outputs.
 
+tickers_sp500 = fm.extract_tickers('sp500_tickers.txt')
+print(tickers_sp500)
+print(len(tickers_sp500))
 
 chosen_stock = input("Enter the ticker symbol of the stock you want to analyze: ")
 
